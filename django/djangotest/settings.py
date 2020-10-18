@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'test_log',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +121,55 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# test_log
+# LOGGINGの設定
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': "[%(asctime)s] %(levelname)s:[%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%Y-%m-%d %H:%M:%S"
+        },
+    },
+    'handlers': {
+        # ファイル出力用
+        'file': {
+            'level': 'INFO',
+            'filename': 'debug.log',
+
+            # ファイルサイズでログローテートする場合
+            # https://docs.python.org/ja/3/library/logging.handlers.html#rotatingfilehandler
+            # 'class': 'logging.FileHandler',
+            # 'class': 'logging.handlers.RotatingFileHandler',
+            # 'maxBytes': 100000,
+
+            # 時間でログローテートする場合
+            # https://docs.python.org/ja/3/library/logging.handlers.html#timedrotatingfilehandler
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'when': 'D',
+            'interval': 1,
+
+            'formatter': 'standard',
+        },
+        # console出力用
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+    },
+    # すべてのログが出力される
+    'root': {
+        'handlers': ['file'],
+        'level': 'WARNING',
+    },
+    # 'loggers': {
+    #     'main': {
+    #         'handlers': ['console', 'file'],
+    #         'level': 'INFO',
+    #         'propagate': True,
+    #     },
+    # },
+
+}
